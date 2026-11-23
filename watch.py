@@ -87,13 +87,15 @@ def query_all(app_ids):
         todo = [a for a in app_ids if a not in found]
         if not todo:
             break
-        cmd = ["docker", "run", "--rm", "steamcmd/steamcmd:latest", "+login", "anonymous", "+app_info_update", "1"]
+        # seccomp=unconfined: o SteamCMD e de 32 bits e, sem isso, o Docker 29 do runner bloqueia a abertura de sockets
+        cmd = ["docker", "run", "--rm", "--security-opt", "seccomp=unconfined", "steamcmd/steamcmd:latest",
+               "+login", "anonymous", "+app_info_update", "1"]
         for a in todo:
             cmd += ["+app_info_print", a]
         cmd += ["+quit"]
         try:
             t0 = time.time()
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=150)
             out = proc.stdout
             log(f"steamcmd terminou em {time.time() - t0:.0f}s, código {proc.returncode}, {len(out)} caracteres")
             if not all(extract(out, a) for a in todo):
