@@ -92,7 +92,14 @@ def query_all(app_ids):
             cmd += ["+app_info_print", a]
         cmd += ["+quit"]
         try:
-            out = subprocess.run(cmd, capture_output=True, text=True, timeout=300).stdout
+            t0 = time.time()
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            out = proc.stdout
+            log(f"steamcmd terminou em {time.time() - t0:.0f}s, código {proc.returncode}, {len(out)} caracteres")
+            if not all(extract(out, a) for a in todo):
+                log("fim da saída: " + out[-700:].replace("\n", " | "))
+                if proc.stderr.strip():
+                    log("erros: " + proc.stderr[-400:].replace("\n", " | "))
             for a in todo:
                 info = extract(out, a)
                 if info:
