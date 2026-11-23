@@ -1,0 +1,9 @@
+{
+  "intervalMinutes": 5,
+  "failureAlertAfter": 6,
+  "heartbeatHour": 9,
+  "apps": [
+    { "id": "4080220", "name": "FC 27 (jogo normal)" },
+    { "id": "4407750", "name": "FC 27 Lite" }
+  ]
+}

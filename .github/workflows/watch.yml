@@ -1,0 +1,45 @@
+name: watch
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      selftest:
+        description: "Simula uma atualização e manda o aviso marcado como teste"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: watch
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baixar o SteamCMD
+        run: docker pull -q steamcmd/steamcmd:latest
+
+      - name: Consultar a Steam e avisar
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          MENTION_USER_ID: ${{ secrets.MENTION_USER_ID }}
+          SELFTEST: ${{ inputs.selftest }}
+        run: python3 watch.py
+
+      - name: Guardar o estado
+        run: |
+          git config user.name "David Rodrigues"
+          git config user.email "daviddroidslk@gmail.com"
+          if ! git diff --quiet state.json; then
+            git add state.json
+            git commit -m "update state"
+            git push
+          fi
