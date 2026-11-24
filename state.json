@@ -1,10 +1,8 @@
 {
-  "lastHeartbeat": "2026-11-23",
-  "failures": 0,
   "apps": {
     "4080220": {
-      "timeupdated": "1794906024",
       "buildid": "26589045",
+      "timeupdated": "1794906024",
       "timebuildupdated": "1794393633",
       "depots": [
         "3340991:477702137572216299",
@@ -38,8 +36,8 @@
       ]
     },
     "4407750": {
-      "timeupdated": "1772140477",
       "buildid": "22116598",
+      "timeupdated": "1772140477",
       "timebuildupdated": "1772140331",
       "depots": [
         "3340991:477702137572216299",
@@ -73,5 +71,7 @@
       ]
     }
   },
-  "failAlerted": false
+  "failures": 0,
+  "failAlerted": false,
+  "lastHeartbeat": "2026-11-23"
 }
